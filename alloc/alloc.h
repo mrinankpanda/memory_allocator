@@ -1,5 +1,4 @@
-#include <type_traits>
-#define GNU_SOURCE
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
