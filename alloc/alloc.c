@@ -1,4 +1,5 @@
 #include "alloc.h"
+#include "birchutils.h"
 
 static char memspace[1024 * 1024 * 1024];
 
@@ -51,7 +52,7 @@ void *alloc(int32 bytes) {
     void *mem;
 
     words = (!(bytes % 4)) ? bytes/4 : (bytes/4);
-        
+
     hdr = findBlock(words);
     if (!hdr) return $v 0;
     if (words > maxWords) reterr(errNoMem); 
@@ -67,21 +68,31 @@ void *alloc(int32 bytes) {
     });
 }
 
+void show_(header *hdr) {
+    header *p;
+    void *mem; 
+    int32 n; 
+
+    for (p=hdr; p->w; mem=$v p + ((p->w+1)*4), p=mem, n++) {
+        printf("Alloc %d = %d %s words\n", n, p->w, (p->allocated) ? "allocated" : "free"); 
+    }
+
+    return;
+}
+
 int main(int argc, char *argv[]) {
-    header *hdr;
     int8 *p;
+    int8 *p2;
+    int8 *p3;
 
     p = alloc(7);
     printf("Allocated 0x%x\n", $i p); 
 
-    hdr = findBlock(500);
-    if (!hdr) {
-        printf("Error %d\n", errno);
-        return -1; 
-    }
+    p = alloc(7);
+    p2 = alloc(2000);
+    p3 = alloc(1);
 
-    printf("Memspace = 0x%x\n", $i memspace);
-    printf("Block = 0x%x\n", $i hdr); 
+    show();
 
     return 0; 
 }

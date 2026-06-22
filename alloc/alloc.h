@@ -41,9 +41,10 @@ typedef struct packed s_header header;
 #define $h (header *)
 
 #define reterr(x) do { errno = (x); return NULL; } while(false)
+#define findBlock(x) findblock_($h memspace, (x), 0)
+#define show() show_($h memspace)
 
-#define findBlock(x) findblock_((header *)memspace, (x), 0)
-
+void show_(header*); 
 header *findblock_(header*, word, word); 
 void *mkalloc(word words, header *hdr);
 void *alloc(int32); 
